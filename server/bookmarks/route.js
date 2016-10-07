@@ -2,9 +2,7 @@
 var express = require('express');
 var router = express.Router();
 
-	router.get('/',function(req,res) {
-		console.log('hello');
-		res.send(200);
-	});
+	router.get('/', require('./getS.js'));
+	router.post('/', require('./post.js'));
 
 module.exports = router;
