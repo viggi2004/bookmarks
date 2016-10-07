@@ -1,3 +1,13 @@
 .title {
 	text-align: center;
 }
+body {
+	padding-top: 50px;
+}
+.hide {
+	visibility: hidden;
+}
+.bookmark-list {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
