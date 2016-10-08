@@ -34,7 +34,29 @@
           </div>
         </div>
         <div id="folder-area" class="col-lg-6">
-          
+          <h3><button class="btn btn-primary" name="newfolder" ng-click="doCreateFolder()">Create new folder</button></h3>
+          <div class="folder-area">
+            <div class="folder-unit create-folder hide">
+              <div class="folder-image">
+                <img src="./images/newfolder.png" width="100px" height="100px">
+              </div>
+              <div class="folder-name">
+                <input type="text" placeholder="New folder" name="filename" ng-enter="doSaveFolder(event)">
+              </div>
+            </div>
+            <div ng-repeat="folder in folders">
+              <div class="folder-unit" id="folder._id">
+                <div class="folder-image">
+                  <img src="./images/newfolder.png" width="100px" height="100px">
+                  <button class="fa fa-trash" name="delete-folder" id="{{folder._id}}" ng-click="doDeleteFolder(folder._id)"></button>
+
+                </div>
+                <div class="folder-name">
+                  <input type="text" placeholder="New folder" value="{{folder.name}}" name="filename">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
       </div>
@@ -47,6 +69,7 @@
     <script src="./bower_components/underscore/underscore-min.js"></script>
     <script src="./app.js"></script>
     <script src="./services/adapter.js"></script>
+    <script src="./directives/directives.js"></script>
     <!-- <script src="./indexCtrl.js"></script> -->
 
   </body>

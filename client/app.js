@@ -1,11 +1,11 @@
 var _ = window._;
 var module = angular.module('bookmarksApp', [
-	'ngRoute'//,
-	//'bookmarksApp.bookmarks',
-	//'bookmarksApp.folders'
+	'ngRoute'
 	]);
-module.controller('indexCtrl', ['$scope', 'adapter', function($scope, adapter) {
+module.controller('indexCtrl', ['$scope', 'adapter', '$compile', function($scope, adapter, $compile) {
 	$scope.bookmarks = [];
+	$scope.filename = '';
+	$scope.folders = [];
 	adapter.getBookmarkS('folder=root', function(err, bookmarks) {
 		if(!err) {
 			bookmarks = _.map(bookmarks, function(item) {
@@ -14,6 +14,11 @@ module.controller('indexCtrl', ['$scope', 'adapter', function($scope, adapter) {
 			});
 			$scope.bookmarks = $scope.bookmarks.concat(bookmarks);	
 		}
+	});
+	adapter.getFolderS(function(err, folders) {
+		if (!err)
+			$scope.folders = $scope.folders.concat(folders);
+		console.log($scope.folders);
 	});
 	$('#add-bookmark').on('click',function() {
 		var title = $('#title').val();
@@ -72,6 +77,38 @@ module.controller('indexCtrl', ['$scope', 'adapter', function($scope, adapter) {
 			if (!err) {
 				$scope.bookmarks = _.reject($scope.bookmarks, function(item) {
 					return doc._id===item._id;
+				});
+			}
+		});
+	}
+
+	$scope.doSaveFolder = function(event) {
+		var elem = event.target;
+		var folder = elem.value;
+		console.log(folder);
+		adapter.postFolder(folder, function(err, doc) {
+			if(!err) {
+				console.log(doc);
+				$scope.folders.push(doc);
+				$(elem).closest('.folder-unit').attr('id', doc._id); //this is useful when u r dragging
+				$(elem).blur();
+				$('.create-folder').find('input').val('');
+				$('.create-folder').addClass('hide');
+
+			}
+		});
+	};
+
+	$scope.doCreateFolder = function() {
+		$('.create-folder').removeClass('hide');
+	}
+
+	$scope.doDeleteFolder = function(id) {
+		var query = 'id=' + id;
+		adapter.deleteFolder(query, function(err, res) {
+			if(!err) {
+				$scope.folders = _.reject($scope.folders, function(item) {
+					return item._id === id;
 				});
 			}
 		});

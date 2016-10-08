@@ -7,7 +7,7 @@ var module = angular.module('bookmarksApp').factory(
 			$http.get(postTo).then(function(res) {
 				cb(null, res.data);
 			}, function(res) {
-				cb(res, null);
+				cb(res.data, null);
 			});
 		};
 		
@@ -21,7 +21,7 @@ var module = angular.module('bookmarksApp').factory(
 			$http.post(postTo, json).then(function(res) {
 				cb(null, res.data);
 			}, function(res) {
-				cb(res, null);
+				cb(res.data, null);
 			});
 		};
 
@@ -36,7 +36,7 @@ var module = angular.module('bookmarksApp').factory(
 			$http.put(postTo, json).then(function(res) {
 				cb(null, res.data);
 			}, function(res) {
-				cb(res, null);
+				cb(res.data, null);
 			});
 		};
 
@@ -45,9 +45,38 @@ var module = angular.module('bookmarksApp').factory(
 			$http.delete(postTo).then(function(res) {
 				cb(null, res.data);
 			},function(res) {
-				cb(res, null);
+				cb(res.data, null);
 			});
 		};
 
+		adapter.postFolder = function(folder, cb) {
+			var postTo = '/folders';
+			var json = {
+				name: folder
+			}
+			$http.post(postTo, json).then(function(res) {
+				cb(null, res.data);
+			},function(res) {
+				cb(res.data, null);
+			});
+		}
+
+		adapter.getFolderS = function(cb) {
+			var postTo = '/folders';
+			$http.get(postTo).then(function(res) {
+				cb(null, res.data);
+			}, function(res) {
+				cb(res.data, null);
+			});
+		}
+
+		adapter.deleteFolder = function(query, cb) {
+			var postTo = '/folders?' + query;
+			$http.delete(postTo).then(function(res) {
+				cb(null, res.data);
+			}, function(res) {
+				cb(res.data, null);
+			});
+		}
 		return adapter;
 	}]);
