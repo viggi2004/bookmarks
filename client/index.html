@@ -4,14 +4,14 @@
   <link href="./bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="./index.css" rel="stylesheet">
 </head>
-  <body>
+  <body  ng-controller="indexCtrl">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/app">Root</a>
+          <a class="navbar-brand" href="/app">{{currentDir}}</a>
         </div>
     </nav>
     <div class="container">
-      <div class="row" ng-controller="indexCtrl">
+      <div class="row">
         <div id="bookmark-area" class="col-lg-6">
           <h3>Add bookmarks</h3>
           <div id="bookmark">
@@ -23,7 +23,8 @@
                <p class="text-danger">Both fields are mandatory</p>
               </div>
             </div>
-            <div class="bookmark-list" ng-repeat="bookmark in bookmarks">
+            <div class="bookmark-list" id="{{bookmark._id}}" ng-repeat="bookmark in bookmarks | filter: {folder: currentDir}" ng-draggable>
+              <span><i class="fa fa-navicon"></i></span>
               <input type="text" id="{{bookmark._id}}" name="title" value="{{bookmark.title}}" ng-disabled="!bookmark.editMode">
               <input type="text" id="{{bookmark._id}}" name="url" value="{{bookmark.url}}" ng-disabled="!bookmark.editMode">
               <button class="btn btn-primary" name="edit" id="{{bookmark._id}}" ng-click="doEdit(bookmark._id)">Edit</button>
@@ -44,8 +45,8 @@
                 <input type="text" placeholder="New folder" name="filename" ng-enter="doSaveFolder(event)">
               </div>
             </div>
-            <div ng-repeat="folder in folders">
-              <div class="folder-unit" id="folder._id">
+            <div ng-repeat="folder in folders" ng-droppable id="{{folder._id}}">
+              <div class="folder-unit" id="{{folder._id}}">
                 <div class="folder-image">
                   <img src="./images/newfolder.png" width="100px" height="100px">
                   <button class="fa fa-trash" name="delete-folder" id="{{folder._id}}" ng-click="doDeleteFolder(folder._id)"></button>
@@ -67,9 +68,11 @@
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/underscore/underscore-min.js"></script>
+    <script src="./bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script src="./app.js"></script>
     <script src="./services/adapter.js"></script>
     <script src="./directives/directives.js"></script>
+
     <!-- <script src="./indexCtrl.js"></script> -->
 
   </body>

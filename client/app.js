@@ -2,11 +2,29 @@ var _ = window._;
 var module = angular.module('bookmarksApp', [
 	'ngRoute'
 	]);
-module.controller('indexCtrl', ['$scope', 'adapter', '$compile', function($scope, adapter, $compile) {
+module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', function($scope, adapter, $compile, $timeout) {
 	$scope.bookmarks = [];
 	$scope.filename = '';
 	$scope.folders = [];
-	adapter.getBookmarkS('folder=root', function(err, bookmarks) {
+	$scope.currentDir = 'root';
+	$(document).ready(function(){
+		$('.folder-unit').dblclick(function(event) {
+			var folderId = $(event.target).closest('.folder-unit').attr('id');
+			var folder = _.findWhere($scope.folders, {'_id': folderId});
+			if(folder) {
+				$scope.$apply(function(){
+					$scope.currentDir = folder.name;
+				});
+			}
+		});
+	});
+	$scope.setCurrentDir = function(name) {
+		console.log(name);
+		$scope.currentDir = name;
+	}
+
+	var query = '';
+	adapter.getBookmarkS(query, function(err, bookmarks) {
 		if(!err) {
 			bookmarks = _.map(bookmarks, function(item) {
 				item.editMode = false;
@@ -18,7 +36,6 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', function($scope
 	adapter.getFolderS(function(err, folders) {
 		if (!err)
 			$scope.folders = $scope.folders.concat(folders);
-		console.log($scope.folders);
 	});
 	$('#add-bookmark').on('click',function() {
 		var title = $('#title').val();
@@ -33,6 +50,9 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', function($scope
 				if (!err) {
 					bookmark.editMode = false;
 					$scope.bookmarks.push(bookmark);
+					$('#title').val('');
+					$('#url').val('');
+
 				}
 			});
 		}
@@ -85,16 +105,13 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', function($scope
 	$scope.doSaveFolder = function(event) {
 		var elem = event.target;
 		var folder = elem.value;
-		console.log(folder);
 		adapter.postFolder(folder, function(err, doc) {
 			if(!err) {
-				console.log(doc);
 				$scope.folders.push(doc);
 				$(elem).closest('.folder-unit').attr('id', doc._id); //this is useful when u r dragging
 				$(elem).blur();
 				$('.create-folder').find('input').val('');
 				$('.create-folder').addClass('hide');
-
 			}
 		});
 	};
