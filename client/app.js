@@ -7,17 +7,7 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 	$scope.filename = '';
 	$scope.folders = [];
 	$scope.currentDir = {'folderName': 'root'};
-	$(document).ready(function(){
-		$('.folder-unit').dblclick(function(event) {
-			var folderId = $(event.target).closest('.folder-unit').attr('id');
-			var folder = _.findWhere($scope.folders, {'_id': folderId});
-			if(folder) {
-				$scope.$apply(function(){
-					$scope.currentDir.folderName = folder.name;
-				});
-			}
-		});
-	});
+
 	$scope.setCurrentDir = function(name) {
 		$scope.currentDir.folderName = name;
 	}
@@ -105,6 +95,12 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 	$scope.doSaveFolder = function(event) {
 		var elem = event.target;
 		var folder = elem.value;
+		var check = _.findWhere($scope.folders, {name: folder});
+		if(check) {
+			alert('Can\'t create folder. Folder with same name already exists');
+			return;
+		}
+
 		adapter.postFolder(folder, function(err, doc) {
 			if(!err) {
 				$scope.folders.push(doc);
@@ -118,6 +114,7 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 
 	$scope.doCreateFolder = function() {
 		$('.create-folder').removeClass('hide');
+		$('.create-folder').children('input').focus();
 	}
 
 	$scope.doDeleteFolder = function(id) {
