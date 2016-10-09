@@ -45,7 +45,8 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 		}
 		else {
 			$('.error').addClass('hidden');
-			adapter.postBookmark(title, url, 'root', function(err, bookmark) {
+			var folder = $scope.currentDir.folderName;
+			adapter.postBookmark(title, url, folder, function(err, bookmark) {
 				if (!err) {
 					bookmark.editMode = false;
 					$scope.bookmarks.push(bookmark);
@@ -74,7 +75,7 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 
 		var title = $(titleSelector).val();
 		var url = $(urlSelector).val();
-		var folder = 'root';
+		var folder = $scope.currentDir.folderName;
 		adapter.putBookmark(id, title, url, folder, function(err, bookmark) {
 			if(!err) {
 				$scope.bookmarks = _.map($scope.bookmarks, function(item) {
