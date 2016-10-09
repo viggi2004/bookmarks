@@ -6,21 +6,20 @@ module.controller('indexCtrl', ['$scope', 'adapter', '$compile', '$timeout', fun
 	$scope.bookmarks = [];
 	$scope.filename = '';
 	$scope.folders = [];
-	$scope.currentDir = 'root';
+	$scope.currentDir = {'folderName': 'root'};
 	$(document).ready(function(){
 		$('.folder-unit').dblclick(function(event) {
 			var folderId = $(event.target).closest('.folder-unit').attr('id');
 			var folder = _.findWhere($scope.folders, {'_id': folderId});
 			if(folder) {
 				$scope.$apply(function(){
-					$scope.currentDir = folder.name;
+					$scope.currentDir.folderName = folder.name;
 				});
 			}
 		});
 	});
 	$scope.setCurrentDir = function(name) {
-		console.log(name);
-		$scope.currentDir = name;
+		$scope.currentDir.folderName = name;
 	}
 
 	var query = '';

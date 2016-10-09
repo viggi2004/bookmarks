@@ -27,6 +27,15 @@ directive('ngEnter', function() {
 .directive('ngDroppable', function(adapter) {
 	return {
 		link: function(scope, elem, attr) {
+			$(elem).on('dblclick', function(event) {
+				var folderId = $(event.target).closest('.folder-unit').attr('id');
+				var folder = _.findWhere(scope.folders, {'_id': folderId});
+				if(folder) {
+					scope.$apply(function(){
+						scope.currentDir.folderName = folder.name;
+					});
+				}
+			});
 			$( elem ).droppable({
   		accept: '.bookmark-list',
   		drop: function(event, ui) {
