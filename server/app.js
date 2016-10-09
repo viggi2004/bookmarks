@@ -12,7 +12,7 @@ mongoose.connection.on('error', function(err) {
   process.exit(-1);
 });
 
-var root = path.normalize(`${__dirname}/..`);
+var root = path.normalize(__dirname + '/..');
 app.use('/app',express.static(path.join(root,'client')));
 
 app.use(bodyParser.urlencoded({ extended: true }));
