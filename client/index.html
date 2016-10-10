@@ -46,7 +46,7 @@
                 <input type="text" placeholder="New folder" name="filename" ng-enter="doSaveFolder(event)">
               </div>
             </div>
-            <div ng-repeat="folder in folders" ng-droppable id="{{folder._id}}">
+            <div ng-repeat="folder in folders" ng-droppable id="{{folder._id}}" ng-if="folder.name !== currentDir.folderName">
               <div class="folder-unit" id="{{folder._id}}">
                 <div class="folder-image">
                   <img src="./images/newfolder.png" width="100px" height="100px">
